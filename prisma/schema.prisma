@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Store { 
+  id        String   @id @default(cuid())
+  name      String
+  userId    String
+  tasks     Task[]   // Relation to Task model
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Task {
+  id          String   @id @default(cuid())
+  title       String
+  description String?  // Optional field for task details
+  statusId    String
+  status      Status   @relation(fields: [statusId], references: [id]) 
+  priorityId  String
+  priority    Priority @relation(fields: [priorityId], references: [id]) 
+  projectId   String
+  project     Store  @relation(fields: [projectId], references: [id])
+  dueDate     DateTime? // Optional deadline
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([projectId])
+  @@index([statusId])
+  @@index([priorityId])
+}
+
+model Status {
+  id        String   @id @default(cuid())
+  name      String   @unique // e.g., "Pending", "In Progress", "Completed"
+  tasks     Task[]   // Relation to Task model
+  projectId   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime? @updatedAt
+
+  @@index([projectId])
+}
+
+model Priority {
+  id        String   @id @default(cuid())
+  name     String   @unique // e.g., "Low", "Medium", "High"
+  tasks     Task[]   // Relation to Task model
+  projectId   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime? @updatedAt
+
+   @@index([projectId])
+}
