@@ -58,6 +58,7 @@ const SettingsForm: React.FC<SettingsFormProps> = (
             await axios.patch(`/api/stores/${params.storeId}`, data)
             router.refresh()
             toast.success('Store updated.')
+             router.push("/")
         } catch (error) {
             toast.error('Something went wrong.')
         } finally {
@@ -90,7 +91,7 @@ const SettingsForm: React.FC<SettingsFormProps> = (
     <div className="flex items-center justify-between">
         <Heading 
         title="Settings" 
-        description="Manage store preferences" />
+        description="Manage project preferences" />
         <Button
         variant="destructive"
         size="icon"
